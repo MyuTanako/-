@@ -14,14 +14,15 @@ void main(void)
 	char word[MAXLEN];
 	char mword[MAXLEN];
 	char mass[10][50];
-	int i,j=0,k;
+	int i, j = 0, k;
 	int flag;
-	int flag_print=1;
+	int flag_print = 1;
 	int prev_flag;
 	int mflag = 0;
 	char *ptr;
 	char *begin;
 	char *start;
+	float a = B;
 	WORD foregroundColor0;
 	WORD textAttribute;
 	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -40,7 +41,7 @@ void main(void)
 		while (*ptr != 0)
 		{
 			prev_flag = flag;
-			if (*ptr == ' ' || *ptr == ',' || *ptr == '.' || *ptr == '\n' || *ptr == '(' || *ptr == ')' || *ptr == '!')
+			if (*ptr == ' ' || *ptr == ',' || *ptr == '.' || *ptr == '\n' || *ptr == '(' || *ptr == ')' || *ptr == '!' || *ptr == ';')
 				flag = NOT_THE_LETTER;
 			else
 				flag = LETTER;
@@ -48,16 +49,16 @@ void main(void)
 			if (flag != prev_flag)
 			{
 				word[i] = '\0';
+				if (*ptr == '\n')
+				{
+					mflag = 0;
+					flag_print = 1;
+				}
 				if (mflag && prev_flag && flag_print)
 				{
 					strcpy(mword, word);
 					strcpy(mass[j], word);
 					flag_print = 0;
-				}
-				if (*ptr == '\n')
-				{
-					mflag = 0;
-					flag_print = 1;
 				}
 				if (mflag && *ptr == '.' && !flag_print)
 				{
@@ -69,7 +70,7 @@ void main(void)
 					flag_print = 1;
 					mflag = 0;
 				}
-				if (!strcmp(word,"#define\0"))
+				if (!strcmp(word, "#define\0"))
 				{
 					mflag = 1;
 				}
@@ -81,8 +82,8 @@ void main(void)
 						SetConsoleTextAttribute(hStdout, textAttribute);
 					}
 				}
-				if(flag_print)
-				printf("%s", word);
+				if (flag_print)
+					printf("%s", word);
 				i = 0;
 			}
 			word[i++] = *ptr++;
