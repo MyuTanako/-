@@ -1,38 +1,47 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #define MAXLINE 1024
-void main( void )
+void main(void)
 {
-	FILE *fpin; // входной файл
-	FILE *fpout; // выходной файл
-	char line[MAXLINE]; // текущая строка
+	FILE *fpin; // ������� ����
+	FILE *fpout; // �������� ����
+	char line[MAXLINE]; // ������� ������
 	char *ptr;
 	char *buf;
 	int i, n;
-	n = 30; // ограничитель
-	fpin = fopen( "test.txt", "rt" ); // открыть файл для чтения
-	if( fpin == NULL )
-		return; // ошибка при открытии файла
-	fpout = fopen("result.txt", "wt" ); // открыть файл для записи
-	if( fpout == NULL )
-		return; // ошибка при открытии файла
-	while( !feof( fpin ) )// цикл до конца входного файла
+	int flag = 0;
+	n = 30; // ������������
+	fpin = fopen("test.txt", "rt"); // ������� ���� ��� ������
+	if (fpin == NULL)
+		return; // ������ ��� �������� �����
+	fpout = fopen("result.txt", "wt"); // ������� ���� ��� ������
+	if (fpout == NULL)
+		return; // ������ ��� �������� �����
+	while (!feof(fpin))// ���� �� ����� �������� �����
 	{
+		ptr = fgets(line, MAXLINE, fpin); // ������ ������
 		buf = ptr;
-		ptr = fgets( line, MAXLINE, fpin ); // чтение строки
-		if( ptr == NULL )
-			break; // файл исчерпан
-		for(i=0;i<n;i++)
+		flag = 0;
+		if (ptr == NULL)
+			break; // ���� ��������
+		for (i = 0; i < n; i++)
 		{
-			if( *ptr == ' ' || *ptr == '.' || *ptr == ',' || *ptr == '\0' )
+			if (*ptr == ' ' || *ptr == '.' || *ptr == ',' || *ptr == '\0' || *ptr == '\n')
 			{
 				buf = ptr;
+				if(*ptr == '\n')
+				 flag = 1;
 			}
-			ptr++; // продвигаем указатель по строке
+			ptr++; // ���������� ��������� �� ������
 		}
-		*buf++ = '\n'; // ставим символ "конец строки"
-		*buf = '\0'; // ставим ограничитель строки
-		fputs( line, fpout ); // запись строки
+		if (!flag)
+		{
+			*buf++ = '\n'; // ������ ������ "����� ������"
+		}
+		*buf = '\0'; // ������ ������������ ������
+		fputs(line, fpout); // ������ ������
 	}
-	fclose( fpin ); // закрыть входной файл
-	fclose( fpout ); // закрыть выходной файл
+	fclose(fpin); // ������� ������� ����
+	fclose(fpout); // ������� �������� ����
 }
+
